@@ -115,6 +115,12 @@ def kegg_dissect(df, info, beg, end):
     >>> for array in result:
     >>>     adjacency_list = np.vstack([adjacency_list, array])
     >>> adjacency_list = np.delete(adjacency_list, (0), axis=0)
+        [['gn:T00001' 'PMID:7542800']
+         ['gn:T00002' 'PMID:7569993']
+         ['gn:T00003' 'PMID:8688087']
+         ['gn:T00004' 'PMID:8905231']
+         ['gn:T00004' 'PMID:8590279']
+         ['gn:T00005' 'PMID:8849441']]
     """
     if info == 'ref':
         return [get_kegg_reference(x) for x in df['KeggID'].iloc[beg:end].values]
