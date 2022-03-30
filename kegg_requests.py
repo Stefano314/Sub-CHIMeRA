@@ -31,7 +31,7 @@ def get_kegg_reference(keggid):
         k_id = np.array([keggid] * n_true)
         return np.array([k_id, np.array([pmid.split()[1] for row in df[ref_positions].values.tolist() for pmid in row])]).T
     else:
-        return None
+        return np.array([keggid, None])
 
 def get_kegg_dblinks(keggid, stopwords = ['REFERENCE','ATOM']):
     """
