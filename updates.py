@@ -16,16 +16,17 @@ def kegg_update(kegg_df, info):
         return [element for elements in results for element in elements]
     
     def kegg_script():
-    db_path = "./Databases/Kegg"
+    kegg_path = "./Databases/Kegg/"
+    kegg_references_path = "./Databases/References/"
     kegg_genomes = pd.read_csv("https://rest.kegg.jp/list/genome", sep = "(?<=\d)\t", engine = "python", header = None,
                                         names=["KeggID", "Description"])
     kegg_diseases = pd.read_csv("https://rest.kegg.jp/list/disease", sep = "(?<=\d)\t", engine = "python", header = None,
                                names = ["KeggID", "Description"])
     kegg_drugs = pd.read_csv("https://rest.kegg.jp/list/drug", sep = "(?<=\d)\t", engine = "python", header = None,
                                names = ["KeggID", "Description"])
-    # kegg_genomes.to_csv(db_path+'kegg_genomes.csv')
-    # kegg_diseases.to_csv(db_path+'kegg_diseases.csv')
-    # kegg_drugs.to_csv(db_path+'kegg_drugs.csv')
+    # kegg_genomes.to_csv(kegg_path+'kegg_genomes.csv')
+    # kegg_diseases.to_csv(kegg_path+'kegg_diseases.csv')
+    # kegg_drugs.to_csv(kegg_path+'kegg_drugs.csv')
     gen = kegg_update(kegg_genomes, 'ref')
     dis = kegg_update(kegg_diseases, 'ref')
     dru = kegg_update(kegg_drugs, 'ref')
