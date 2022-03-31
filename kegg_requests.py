@@ -27,7 +27,7 @@ def get_kegg_reference(keggid):
     df = pd.read_csv('http://rest.kegg.jp/get/' + keggid, names = ['filelines'], sep = "NoSeparatorRequired", engine = 'python')
     ref_positions = df['filelines'].str.startswith('REFERENCE').values
     n_true = np.count_nonzero(ref_positions)
-    if n_true>0:
+    if n_true>0 and len(df[ref_positions].values.tolist()[0][0].split())>1:
         k_id = np.array([keggid] * n_true)
         return np.array([k_id, np.array([pmid.split()[1] for row in df[ref_positions].values.tolist() for pmid in row])]).T
     else:
