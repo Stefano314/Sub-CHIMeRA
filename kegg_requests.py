@@ -20,8 +20,8 @@ def get_kegg_reference(keggid):
 
     Returns
     -------
-    output : list
-        The list is the adjacency list between the keggid given and the references found.
+    output : ndarray
+        Numpy array containing the adjacency list between the keggid given and the references found.
     """
     tm.sleep(0.9)
     df = pd.read_csv('http://rest.kegg.jp/get/' + keggid, names = ['filelines'], sep = "NoSeparatorRequired", engine = 'python')
@@ -59,8 +59,8 @@ def get_kegg_dblinks(keggid, stopwords = ['REFERENCE','ATOM']):
 
     Returns
     -------
-    output : list
-        The list is the adjacency list between the keggid given and the dblinks found.
+    output : ndarray
+        Numpy array containing the adjacency list between the keggid given and the dblinks found.
     """
     tm.sleep(0.9)
     df = pd.read_csv('http://rest.kegg.jp/get/' + keggid, names = ['filelines'], sep = "NoSeparatorRequired", engine = 'python')
@@ -91,7 +91,7 @@ def kegg_dissect(df, info, beg, end):
     Parameters
     ----------
     df : Pandas.DataFrame
-        DataFrame that holds kegg IDs. The column must be labeled as 'KeggID'.
+        DataFrame that holds kegg IDs. The id column must be labeled as 'KeggID'.
     info : str
         Specifies the type of research to perform in kegg database. It can be 'ref' for 'REFERENCES' or 'dblinks' for
         'DBLINKS'.
@@ -107,7 +107,7 @@ def kegg_dissect(df, info, beg, end):
     Returns
     -------
     output : list
-        The list is the adjacency list between the keggid given and the references found.
+        List of the adjacency lists obtained from each Kegg ID given.
 
     Examples
     --------
@@ -127,3 +127,4 @@ def kegg_dissect(df, info, beg, end):
         return [get_kegg_reference(x) for x in df['KeggID'].iloc[beg:end].values]
     elif info == 'dblinks':
         return [get_kegg_dblinks(x) for x in df['KeggID'].iloc[beg:end].values]
+    
