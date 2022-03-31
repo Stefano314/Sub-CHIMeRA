@@ -3,6 +3,29 @@ import concurrent.futures
 import numpy as np
 
 def kegg_update(kegg_df, info):
+    '''
+    Description
+    -----------
+    This function simply uses the previous function 'kegg_dissect()' in a mulithread structure, in order to speed up the
+    request process as much as possible. It's important to notice that we can't use many requests at the same times,
+    otherwise the server will block the majority of them. For this reason it has been introduced a delay inside the
+    function 'get_kegg_reference()' and 'get_kegg_dblinks()'.
+
+    Parameters
+    ----------
+    kegg_df : Pandas.DataFrame
+        DataFrame that holds kegg IDs. The id column must be labeled as 'KeggID'.
+    info : str
+        Specifies the type of research to perform in kegg database. It can be 'ref' for 'REFERENCES' or 'dblinks' for
+        'DBLINKS'.
+
+    Returns
+    -------
+    output : list
+        List of the results obtained by 'kegg_dissect()' function, which are the adjacency lists obtained from each
+        Kegg ID given.
+
+    '''
     n_elements = len(kegg_df.index)
     res, rest = divmod(n_elements, 4)
     with concurrent.futures.ThreadPoolExecutor(max_workers = 4) as executor:
