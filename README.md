@@ -1,6 +1,6 @@
 # CHIMeRA (v. 03/31/2022)
 ## Usage
-Explanation of the functions and how it is intended to be used:
+Explanation of the functions and how they are intended to be used:
 
 ## Load Kegg Database into Pandas DataFrame
 In order to load Kegg databases it is required to use a DataFrame that has that specific form, meaning two columns labeled as ```KeggID``` and ```Description```. The requests are based on [Kegg API](https://www.kegg.jp/kegg/rest/keggapi.html).
