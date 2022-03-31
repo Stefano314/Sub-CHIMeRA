@@ -1,4 +1,5 @@
 # CHIMeRA (v. 03/31/2022)
+See Nico Curti's repository [CHIMeRA](https://github.com/Nico-Curti/PhDthesis/tree/master/docs/md/Chapter3/CHIMeRA).
 ## Usage
 Explanation of the functions and how they are intended to be used:
 
