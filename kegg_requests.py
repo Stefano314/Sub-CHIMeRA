@@ -26,10 +26,11 @@ def get_kegg_reference(keggid):
     tm.sleep(0.9)
     df = pd.read_csv('http://rest.kegg.jp/get/' + keggid, names = ['filelines'], sep = "NoSeparatorRequired", engine = 'python')
     ref_positions = df['filelines'].str.startswith('REFERENCE').values
-    n_true = np.count_nonzero(ref_positions)
-    if n_true>0 and len(df[ref_positions].values.tolist()[0][0].split())>1:
-        k_id = np.array([keggid] * n_true)
-        return np.array([k_id, np.array([pmid.split()[1] for row in df[ref_positions].values.tolist() for pmid in row])]).T
+    if np.count_nonzero(ref_positions)>0:
+        ref_list = df[ref_positions].values.tolist()
+        good_indexes = [len(i[0].split()) > 1 for i in ref_list]
+        k_id = np.array([keggid] * np.count_nonzero(good_indexes))
+        return np.array([k_id, np.array([pmid.split()[1] for row in np.array(ref_list)[good_indexes] for pmid in row])]).T
     else:
         return np.array([keggid, None])
 
