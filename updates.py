@@ -5,7 +5,6 @@ import numpy as np
 def kegg_update(kegg_df, info):
     n_elements = len(kegg_df.index)
     res, rest = divmod(n_elements, 4)
-    res, rest = 5,0
     with concurrent.futures.ThreadPoolExecutor(max_workers = 4) as executor:
         f1 = executor.submit(kegg_dissect, kegg_df, info, 0, res)
         f2 = executor.submit(kegg_dissect, kegg_df, info, res, 2 * res)
@@ -17,7 +16,7 @@ def kegg_update(kegg_df, info):
     
     def kegg_script():
     kegg_path = "./Databases/Kegg/"
-    kegg_references_path = "./Databases/References/"
+    kegg_references_path = "./Databases/Kegg_References/"
     kegg_genomes = pd.read_csv("https://rest.kegg.jp/list/genome", sep = "(?<=\d)\t", engine = "python", header = None,
                                         names=["KeggID", "Description"])
     kegg_diseases = pd.read_csv("https://rest.kegg.jp/list/disease", sep = "(?<=\d)\t", engine = "python", header = None,
