@@ -30,6 +30,8 @@ def get_kegg_reference(keggid):
         ref_list = df[ref_positions].values.tolist()
         good_indexes = [len(i[0].split()) > 1 for i in ref_list]
         k_id = np.array([keggid] * np.count_nonzero(good_indexes))
+        if k_id.size == 0:
+            return np.array([keggid, None])
         return np.array([k_id, np.array([pmid.split()[1] for row in np.array(ref_list)[good_indexes] for pmid in row])]).T
     else:
         return np.array([keggid, None])
