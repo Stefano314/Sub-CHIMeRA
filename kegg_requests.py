@@ -28,13 +28,13 @@ def get_kegg_reference(keggid):
     ref_positions = df['filelines'].str.startswith('REFERENCE').values
     if np.count_nonzero(ref_positions)>0:
         ref_list = df[ref_positions].values.tolist()
-        good_indexes = [len(i[0].split()) > 1 for i in ref_list]
-        k_id = np.array([keggid] * np.count_nonzero(good_indexes))
+        pmid_list = [[i for i in [a.replace('[','').replace(']','') for a in pmid.split()]
+                        if i.startswith('PMID')] for row in ref_list for pmid in row]
+        pmid_list = [x for x in pmid_list if x != []]
+        k_id = np.array([keggid] * len(pmid_list))
         if k_id.size == 0:
             return np.array([keggid, None])
-        return np.array([k_id, np.array([item for sublist in [[i for i in [a.replace('[','').replace(']','') for a in pmid.split()]
-                                                               if i.startswith('PMID')] for row in np.array(ref_list)[good_indexes]
-                                                               for pmid in row] for item in sublist])]).T
+        return np.array([k_id, np.array([item for sublist in pmid_list for item in sublist])]).T
     else:
         return np.array([keggid, None])
 
