@@ -38,6 +38,11 @@ def kegg_update(kegg_df, info):
         return [element for elements in results for element in elements]
     
     def kegg_script():
+    '''
+    Description
+    -----------
+    At the moment this script update the full database.
+    '''
     kegg_path = "./Databases/Kegg/"
     kegg_references_path = "./Databases/Kegg_References/"
     kegg_genomes = pd.read_csv("https://rest.kegg.jp/list/genome", sep = "(?<=\d)\t", engine = "python", header = None,
@@ -46,25 +51,36 @@ def kegg_update(kegg_df, info):
                                names = ["KeggID", "Description"])
     kegg_drugs = pd.read_csv("https://rest.kegg.jp/list/drug", sep = "(?<=\d)\t", engine = "python", header = None,
                                names = ["KeggID", "Description"])
-    # kegg_genomes.to_csv(kegg_path+'kegg_genomes.csv')
-    # kegg_diseases.to_csv(kegg_path+'kegg_diseases.csv')
-    # kegg_drugs.to_csv(kegg_path+'kegg_drugs.csv')
+    kegg_enzymes = pd.read_csv("https://rest.kegg.jp/list/enzyme", sep = "(?<=\d)\t", engine = "python", header = None,
+                               names = ["KeggID", "Description"])
+    
+    kegg_genomes.to_csv(kegg_path+'kegg_genomes.csv')
+    kegg_diseases.to_csv(kegg_path+'kegg_diseases.csv')
+    kegg_drugs.to_csv(kegg_path+'kegg_drugs.csv')
+    kegg_enzymes.to_csv(kegg_path + '_kegg_enzymes.csv')
+    
     gen = kegg_update(kegg_genomes, 'ref')
     dis = kegg_update(kegg_diseases, 'ref')
     dru = kegg_update(kegg_drugs, 'ref')
+    enz = kegg_update(kegg_enzymes, 'ref')
 
     adjacency_gen = ['dummy', 'dummy']
     adjacency_dis = ['dummy', 'dummy']
     adjacency_dru = ['dummy', 'dummy']
-    for array1, array2, array3 in zip(gen, dis, dru):
-        adjacency_gen = np.vstack([adjacency_gen, array1])
-        adjacency_dis = np.vstack([adjacency_dis, array2])
-        adjacency_dru = np.vstack([adjacency_dru, array3])
+    adjacency_enz = ['dummy', 'dummy']
+    for arr1, arr2, arr3, arr4 in zip(gen, dis, dru, enz):
+        adjacency_gen = np.vstack([adjacency_gen, arr1])
+        adjacency_dis = np.vstack([adjacency_dis, arr2])
+        adjacency_dru = np.vstack([adjacency_dru, arr3])
+        adjacency_enz = np.vstack([adjacency_enz, arr])
 
     adjacency_gen = np.delete(adjacency_gen, (0), axis = 0)
     adjacency_dis = np.delete(adjacency_dis, (0), axis = 0)
     adjacency_dru = np.delete(adjacency_dru, (0), axis = 0)
+    adjacency_enz = np.delete(adjacency_enz, (0), axis = 0)
     
-    pd.DataFrame(adjacency_gen, columns = ['KeggID', 'REFERENCE']))#.to_csv(kegg_references_path+'kegg_genomes_references.csv')
-    pd.DataFrame(adjacency_dis, columns = ['KeggID', 'REFERENCE'])#.to_csv(kegg_references_path+'kegg_diseases_references.csv')
-    pd.DataFrame(adjacency_dru, columns = ['KeggID', 'REFERENCE'])#.to_csv(kegg_references_path+'kegg_drugs_references.csv')
+    pd.DataFrame(adjacency_gen, columns = ['KeggID', 'REFERENCE'])).to_csv(kegg_references_path+'kegg_genomes_ref.csv')
+    pd.DataFrame(adjacency_dis, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_diseases_ref.csv')
+    pd.DataFrame(adjacency_dru, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_drugs_refe.csv')
+    pd.DataFrame(adjacency_enz, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_enzymes_ref.csv')
+    
