@@ -38,7 +38,7 @@ def get_kegg_reference(keggid):
     else:
         return np.array([keggid, None])
 
-def get_kegg_dblinks(keggid, stopwords = ['REFERENCE','ATOM']):
+def get_kegg_dblinks(keggid, stopwords = ['REFERENCE','ATOM','BOND','///']):
     """
     Description
     -----------
@@ -60,6 +60,8 @@ def get_kegg_dblinks(keggid, stopwords = ['REFERENCE','ATOM']):
         genome : REFERENCE
         drug : ATOM
         disease : REFERENCE
+        enzyme : ///
+        compound : ATOM, BOND
 
     Returns
     -------
@@ -69,12 +71,12 @@ def get_kegg_dblinks(keggid, stopwords = ['REFERENCE','ATOM']):
     tm.sleep(0.9)
     df = pd.read_csv('http://rest.kegg.jp/get/' + keggid, names = ['filelines'], sep = "NoSeparatorRequired", engine = 'python')
     dblinks_bool = df['filelines'].str.startswith('DBLINKS').values
+    end_indexes = []
     if np.any(dblinks_bool == True):
         beg = np.where(dblinks_bool == True)[0][0]
         for word in stopwords:
             if np.where(df['filelines'].str.startswith(word))[0].size != 0 and \
                     np.where(df['filelines'].str.startswith(word)==True)[0][0] > beg:
-                end_indexes = []
                 end_indexes.append(np.where(df['filelines'].str.startswith(word).values[beg + 1:] == True)[0][0])
         end = np.min(end_indexes)
         res = list(df['filelines'].loc[beg+1:beg+end].values)
