@@ -57,7 +57,7 @@ def kegg_update(kegg_df, info):
     kegg_genomes.to_csv(kegg_path+'kegg_genomes.csv')
     kegg_diseases.to_csv(kegg_path+'kegg_diseases.csv')
     kegg_drugs.to_csv(kegg_path+'kegg_drugs.csv')
-    kegg_enzymes.to_csv(kegg_path + '_kegg_enzymes.csv')
+    kegg_enzymes.to_csv(kegg_path + 'kegg_enzymes.csv')
     
     gen = kegg_update(kegg_genomes, 'ref')
     dis = kegg_update(kegg_diseases, 'ref')
