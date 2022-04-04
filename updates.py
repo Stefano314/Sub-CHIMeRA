@@ -108,7 +108,7 @@ def kegg_update(kegg_df, info):
     pd.DataFrame(adjacency_gen, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_genomes_ref.csv')
     pd.DataFrame(adjacency_dis, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_diseases_ref.csv')
     pd.DataFrame(adjacency_dru, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_drugs_ref.csv')
-    pd.DataFrame(adjacency_enz, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_enzymes_dblinks.csv')
+    pd.DataFrame(adjacency_enz, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_references_path+'kegg_enzymes_ref.csv')
     # DBLINKS
-    pd.DataFrame(adjacency_cpd, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_dblinks_path + 'kegg_enzymes_dblinks.csv')
+    pd.DataFrame(adjacency_cpd, columns = ['KeggID', 'REFERENCE']).to_csv(kegg_dblinks_path + 'kegg_compounds_dblinks.csv')
     
