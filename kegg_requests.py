@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 import time as tm
 
-def get_kegg_reference(keggid):
+def get_kegg_pmid(keggid):
     """
     Description
     -----------
-    Search in Kegg database the KeggID given and returns -- if they exist -- the associated REFERENCES in the form of
+    Search in Kegg database the KeggID given and returns -- if they exist -- the associated PMID in the form of
     an adjacency list.
 
     Parameters
@@ -24,8 +24,10 @@ def get_kegg_reference(keggid):
         Numpy array containing the adjacency list between the keggid given and the references found.
     """
     tm.sleep(0.9)
+    
     df = pd.read_csv('http://rest.kegg.jp/get/' + keggid, names = ['filelines'], sep = "NoSeparatorRequired", engine = 'python')
     ref_positions = df['filelines'].str.startswith('REFERENCE').values
+    
     if np.count_nonzero(ref_positions)>0:
         ref_list = df[ref_positions].values.tolist()
         pmid_list = [[i for i in [a.replace('[','').replace(']','') for a in pmid.split()]
@@ -69,9 +71,12 @@ def get_kegg_dblinks(keggid, stopwords = ['REFERENCE','ATOM','BOND','///']):
         Numpy array containing the adjacency list between the keggid given and the dblinks found.
     """
     tm.sleep(0.9)
+    
     df = pd.read_csv('http://rest.kegg.jp/get/' + keggid, names = ['filelines'], sep = "NoSeparatorRequired", engine = 'python')
+    
     dblinks_bool = df['filelines'].str.startswith('DBLINKS').values
     end_indexes = []
+    
     if np.any(dblinks_bool == True):
         beg = np.where(dblinks_bool == True)[0][0]
         for word in stopwords:
@@ -99,7 +104,7 @@ def kegg_dissect(df, info, beg, end):
     df : Pandas.DataFrame
         DataFrame that holds kegg IDs. The id column must be labeled as 'KeggID'.
     info : str
-        Specifies the type of research to perform in kegg database. It can be 'ref' for 'REFERENCES' or 'dblinks' for
+        Specifies the type of research to perform in kegg database. It can be 'pmid' for 'REFERENCES' or 'dblinks' for
         'DBLINKS'.
     beg : int
         Start position in the dataframe.
@@ -118,7 +123,7 @@ def kegg_dissect(df, info, beg, end):
     Examples
     --------
     >>> adjacency_list = ['dummy','dummy']
-    >>> result = kegg_dissect(kegg_df, 'ref', 0, 5)
+    >>> result = kegg_dissect(kegg_df, 'pmid', 0, 5)
     >>> for array in result:
     >>>     adjacency_list = np.vstack([adjacency_list, array])
     >>> adjacency_list = np.delete(adjacency_list, (0), axis=0)
@@ -129,8 +134,7 @@ def kegg_dissect(df, info, beg, end):
          ['gn:T00004' 'PMID:8590279']
          ['gn:T00005' 'PMID:8849441']]
     """
-    if info == 'ref':
-        return [get_kegg_reference(x) for x in df['KeggID'].iloc[beg:end].values]
+    if info == 'pmid':
+        return [get_kegg_pmid(x) for x in df['KeggID'].iloc[beg:end].values]
     elif info == 'dblinks':
         return [get_kegg_dblinks(x) for x in df['KeggID'].iloc[beg:end].values]
-    
