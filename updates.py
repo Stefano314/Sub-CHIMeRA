@@ -28,7 +28,6 @@ def kegg_update(kegg_df, info):
     '''
     n_elements = len(kegg_df.index)
     res, rest = divmod(n_elements, 4)
-    # res, rest = 3, 0
     with concurrent.futures.ThreadPoolExecutor(max_workers = 4) as executor:
         f1 = executor.submit(kegg_dissect, kegg_df, info, 0, res)
         f2 = executor.submit(kegg_dissect, kegg_df, info, res, 2 * res)
