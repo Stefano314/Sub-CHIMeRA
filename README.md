@@ -10,10 +10,10 @@ kegg_df = pd.read_csv("https://rest.kegg.jp/list/genomes", sep = "(?<=\d)\t", en
                   names=["KeggID", "Description"])
 ```
 
-## get_kegg_reference()
+## get_kegg_pmid()
 This function searches in Kegg database the single Kegg Id given and it returns the information related to the voice "REFERENCE".
 ```python
-get_kegg_reference('ds:H00047')
+get_kegg_pmid('ds:H00047')
 ```
 ```
 output: 
@@ -41,7 +41,7 @@ output:
 ## kegg_dissect()
 This function allows to slide the Kegg Ids stored inside a given dataframe -- in the form that we explained earlier -- from an initial position to an final one, both specified by the user. In addition, the user has to specify the function that will analyze each ID.
 ```python
-kegg_dissect(kegg_df, 'ref', 0, 4)
+kegg_dissect(kegg_df, 'pmid', 0, 4)
 ```
 ```
 output:
@@ -53,7 +53,7 @@ array([['gn:T00004', 'PMID:8905231'],['gn:T00004', 'PMID:8590279']], dtype='<U12
 The output of this function can be used to create a unique adjacency lists in this way:
 ```python
 adjacency_gen = ['dummy', 'dummy']
-for array in kegg_dissect(kegg_df, 'ref', 0, 4):
+for array in kegg_dissect(kegg_df, 'pmid', 0, 4):
     adjacency_gen = np.vstack([adjacency_gen, array])
 adjacency_gen = np.delete(adjacency_gen, (0), axis = 0)
 ```
@@ -66,7 +66,7 @@ output:
  ['gn:T00004' 'PMID:8590279']]
 ```
 ## kegg_update()
-This function simply uses the previous ```kegg_dissect()``` in a mulithread structure, in order to speed up the request process as much as possible. It's important to notice that we can't use many requests at the same times, otherwise the server will block the majority of them. For this reason it has been introduced a delay inside the function ```get_kegg_reference()``` and ```get_kegg_dblinks()```. In the example it is used only the first 4 entries (1 in 4 threads), but by default it uses all the entries in the dataframe.
+This function simply uses the previous ```kegg_dissect()``` in a mulithread structure, in order to speed up the request process as much as possible. It's important to notice that we can't use many requests at the same times, otherwise the server will block the majority of them. For this reason it has been introduced a delay inside the function ```get_kegg_pmid()``` and ```get_kegg_dblinks()```. In the example it is used only the first 4 entries (1 in 4 threads), but by default it uses all the entries in the dataframe.
 ```python
 kegg_update(kegg_df, 'dblinks')
 ```
